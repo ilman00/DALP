@@ -36,7 +36,7 @@ const postSubject = (req, res) => {
 const getSubject = (req, res)=>{
     const classNumber = req.params.classNumber;
     const query = "SELECT * FROM subjects WHERE class = ?"
-    db.query(query, classNumber,(err, result)=>{
+    db.query(query, [classNumber],(err, result)=>{
         if(err){
             return res.status(404).json({Error: err})
         }

@@ -7,10 +7,11 @@ const cors = require("cors");
 const fs = require("fs");
 
 
-const {postSubject, getSubject} = require("./routes/subjectRout")
-const {postChapter, getChapter} = require("./routes/chapterRout")
-
-
+const {postSubject, getSubject} = require("./routes/subjectRout");
+const {postChapter, getChapter} = require("./routes/chapterRout");
+const {postContent, getContent} = require("./routes/contentRout");
+const {postMCQs, getMCQs} = require("./routes/MCQs")
+const {QAget, QApost} = require("./routes/qa")
 
 
 
@@ -23,7 +24,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const allowedOrigins = [
     'http://localhost:5173',                  // Local React app
-    'https://e-digital-pakistan-project.vercel.app',  // Live React app
+    'https://e-digital-pakistan-project.vercel.app',
+    'https://dalp.digipakistan.com/'  // Live React app
 ];
 
 app.use(
@@ -98,11 +100,35 @@ app.get("/api/:classNumber/subject/data", getSubject);
 // Retrieving chapter from database
 app.get("/api/:subjectCode/chapter/data", getChapter);
 
+//  Retrieving Content Data from Database
+app.get("/api/:chapterCode/content/data", getContent);
+// Retrieving Exercise From database
+app.get("/api/:chapterCode/exercise/data", getMCQs);
+//Getting QA
+app.get("/api/:chapterCode/qa/data", QAget);
+
+
+
 // Save Subject in Database
 app.post("/api/subject/data", upload.single("subject"), postSubject);
 
 // saving chapter data in database
 app.post("/api/:subCode/chapter/data", postChapter);
+
+const uploadFields = upload.fields([
+    { name: 'image', maxCount: 1 }, // Accept 1 image file
+    { name: 'video', maxCount: 1 }  // Accept 1 video file
+]);
+// Saving Content Data in the database
+app.post("/api/:chapterCode/content/data", uploadFields, postContent);
+
+// Saving Exercise Data from Database
+app.post("/api/:chapterCode/exercise/data", postMCQs);
+// Saving QA
+app.post("/api/:chapterCode/qa/data", QApost);
+
+
+
 
 
 
