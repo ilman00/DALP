@@ -28,36 +28,14 @@ const allowedOrigins = [
     'https://dalp.digipakistan.com/'  // Live React app
 ];
 
-app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (allowedOrigins.includes(origin) || !origin) {
-                callback(null, true); // Allow the request
-            } else {
-                callback(new Error('Not allowed by CORS')); // Reject the request
-            }
-        },
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        credentials: true, // Allow cookies and credentials
-        allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-        exposedHeaders: ['Authorization'], // Expose necessary headers
-        preflightContinue: false,
-        optionsSuccessStatus: 204,
-    })
-);
-
-
-
+app.use(cors({
+  origin: '*',
+}));
 
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
-
-
-
 
 
 
@@ -126,6 +104,9 @@ app.post("/api/:chapterCode/content/data", uploadFields, postContent);
 app.post("/api/:chapterCode/exercise/data", postMCQs);
 // Saving QA
 app.post("/api/:chapterCode/qa/data", QApost);
+
+
+app.post("/api/:chapterCode/word-meaning/data", QApost);
 
 
 
